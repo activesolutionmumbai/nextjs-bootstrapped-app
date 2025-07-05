@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YouTube Clone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+    /* Custom scrollbar for sidebar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #111;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #444;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-black border-r border-gray-800 flex flex-col">
+    <div class="p-4 text-2xl font-semibold border-b border-gray-800">YouTube</div>
+    <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+      <a href="#" class="block px-3 py-2 rounded hover:bg-gray-800 transition">Home</a>
+      <a href="#" class="block px-3 py-2 rounded hover:bg-gray-800 transition">Trending</a>
+      <a href="#" class="block px-3 py-2 rounded hover:bg-gray-800 transition">Subscriptions</a>
+      <a href="#" class="block px-3 py-2 rounded hover:bg-gray-800 transition">Library</a>
+      <a href="#" class="block px-3 py-2 rounded hover:bg-gray-800 transition">History</a>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <div class="flex-1 flex flex-col">
+    <!-- Header -->
+    <header class="flex items-center justify-between bg-black border-b border-gray-800 px-6 py-3">
+      <div class="text-white text-2xl font-bold">YouTube</div>
+      <div class="flex items-center space-x-4">
+        <input
+          type="text"
+          placeholder="Search"
+          class="bg-gray-900 text-white rounded-l px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white"
+          id="searchInput"
+        />
+        <button
+          id="searchButton"
+          class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-r transition"
+          aria-label="Search"
+        >
+          Search
+        </button>
+      </div>
+      <div>
+        <img
+          src="https://i.pravatar.cc/40"
+          alt="User Avatar"
+          class="rounded-full w-10 h-10 cursor-pointer"
+        />
+      </div>
+    </header>
+
+    <!-- Videos grid -->
+    <main class="flex-1 overflow-y-auto p-6 bg-black">
+      <div id="videosGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- Video cards will be inserted here by JavaScript -->
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const videos = [
+      {
+        id: 1,
+        title: "Learn Tailwind CSS in 10 Minutes",
+        channel: "Dev Channel",
+        views: "1.2M views",
+        date: "1 week ago",
+        thumbnail: "https://i.ytimg.com/vi/6zIuAyLZPH0/hqdefault.jpg",
+      },
+      {
+        id: 2,
+        title: "JavaScript Tutorial for Beginners",
+        channel: "Code Academy",
+        views: "3.4M views",
+        date: "2 weeks ago",
+        thumbnail: "https://i.ytimg.com/vi/W6NZfCO5SIk/hqdefault.jpg",
+      },
+      {
+        id: 3,
+        title: "React JS Crash Course",
+        channel: "Tech World",
+        views: "2.1M views",
+        date: "3 days ago",
+        thumbnail: "https://i.ytimg.com/vi/DLX62G4lc44/hqdefault.jpg",
+      },
+      {
+        id: 4,
+        title: "CSS Grid Tutorial",
+        channel: "Design Hub",
+        views: "900K views",
+        date: "5 days ago",
+        thumbnail: "https://i.ytimg.com/vi/jV8B24rSN5o/hqdefault.jpg",
+      },
+      {
+        id: 5,
+        title: "Node.js Full Course",
+        channel: "Backend Masters",
+        views: "1.5M views",
+        date: "1 month ago",
+        thumbnail: "https://i.ytimg.com/vi/Oe421EPjeBE/hqdefault.jpg",
+      },
+      {
+        id: 6,
+        title: "Python for Beginners",
+        channel: "Code Academy",
+        views: "4.2M views",
+        date: "2 months ago",
+        thumbnail: "https://i.ytimg.com/vi/_uQrJ0TkZlc/hqdefault.jpg",
+      },
+      {
+        id: 7,
+        title: "Vue.js Tutorial",
+        channel: "Frontend Focus",
+        views: "1.1M views",
+        date: "3 weeks ago",
+        thumbnail: "https://i.ytimg.com/vi/4deVCNJq3qc/hqdefault.jpg",
+      },
+      {
+        id: 8,
+        title: "Django Crash Course",
+        channel: "Tech World",
+        views: "800K views",
+        date: "1 week ago",
+        thumbnail: "https://i.ytimg.com/vi/F5mRW0jo-U4/hqdefault.jpg",
+      },
+    ];
+
+    function createVideoCard(video) {
+      const card = document.createElement("div");
+      card.className = "bg-gray-900 rounded overflow-hidden cursor-pointer hover:shadow-lg transition";
+
+      const thumbnail = document.createElement("img");
+      thumbnail.src = video.thumbnail;
+      thumbnail.alt = video.title;
+      thumbnail.className = "w-full h-40 object-cover";
+
+      const info = document.createElement("div");
+      info.className = "p-3";
+
+      const title = document.createElement("h3");
+      title.className = "text-white font-semibold text-sm mb-1";
+      title.textContent = video.title;
+
+      const channel = document.createElement("p");
+      channel.className = "text-gray-400 text-xs";
+      channel.textContent = video.channel;
+
+      const viewsDate = document.createElement("p");
+      viewsDate.className = "text-gray-500 text-xs";
+      viewsDate.textContent = `${video.views} • ${video.date}`;
+
+      info.appendChild(title);
+      info.appendChild(channel);
+      info.appendChild(viewsDate);
+
+      card.appendChild(thumbnail);
+      card.appendChild(info);
+
+      return card;
+    }
+
+    function displayVideos(videosToDisplay) {
+      const grid = document.getElementById("videosGrid");
+      grid.innerHTML = "";
+      videosToDisplay.forEach((video) => {
+        grid.appendChild(createVideoCard(video));
+      });
+    }
+
+    document.getElementById("searchButton").addEventListener("click", () => {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const filteredVideos = videos.filter((video) =>
+        video.title.toLowerCase().includes(query) || video.channel.toLowerCase().includes(query)
+      );
+      displayVideos(filteredVideos);
+    });
+
+    // Initial display
+    displayVideos(videos);
+  </script>
+</body>
+</html>
